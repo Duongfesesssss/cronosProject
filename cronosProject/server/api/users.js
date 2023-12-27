@@ -11,8 +11,8 @@ const verifyToken = require("../services/verify-token");
 /* SET storage */
 var storage = multer.diskStorage({
   destination: function (req, res, cb) {
-    /* Sau này sẽ đổi lại tùy theo việc thay đổi máy chủ */
-    cb(null, "C:\\Users\\TCGAMING\\Desktop\\wow\\cronosProject\\cronosProject\\client\\static\\avatar");
+    
+    cb(null, "\\Users\\TCGAMING\\Desktop\\wow\\cronosProject\\cronosProject\\client\\static\\avatar");
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + "-" + file.originalname);
@@ -154,15 +154,18 @@ router.post("/account", upload.single("avatar"), async (req, res) => {
   var password = req.body.password;
   const encryptedPassword = await bcrypt.hash(password, 10);
 
-  // let linkAvatar;
-  // const file = req.file;
-  // if (!file) {
-  //   linkAvatar = req.body.avatar;
-  // } else {
-  //   linkAvatar = `http://localhost:3000/avatar/${req.file.filename}`;
-  // }
+   let linkAvatar;
+   const file = req.file;
+   if (!file) {
+     linkAvatar = req.body.avatar;
+   } else {
+     linkAvatar = `http://localhost:3000/avatar/${req.file.filename}`;
+   }
 
-  // console.log(encryptedPassword);
+
+
+   console.log(req.file);
+   console.log(encryptedPassword);
 
   try {
     await pool.connect();
