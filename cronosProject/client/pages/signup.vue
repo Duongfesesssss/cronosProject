@@ -13,11 +13,6 @@
                       
                class="input" type="email" placeholder="E-mail address" />
             </div>
-            
-
-
-
-          
 
             <div class="control mb-6">
               <input v-model="form.password" class="input" type="password" placeholder="Password" />
