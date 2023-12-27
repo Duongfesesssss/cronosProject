@@ -105,11 +105,7 @@ router.get("/auth/user", verifyToken, async (req, res) => {
 });
 
 
-router.get("/auth/user", verifyToken, async (req, res) => {
-  // Nếu middleware xác minh token thành công, bạn có thể truy cập thông tin được giải mã từ token qua req.decoded
-  const decodedInfo = req.decoded;
-  res.json({ success: true, message: "Authenticated", user: decodedInfo });
-});
+
 
 
 
@@ -124,6 +120,7 @@ router.post("/auth/login", async (req, res, next) => {
       .request()
       .input("email", email)
       .query(`SELECT * FROM users WHERE email = @email`);
+      console.log(req.email);
     const user = result.recordset[0];
     if (!user) {
       res.status(403).json({
@@ -163,7 +160,7 @@ router.post("/account", upload.single("avatar"), async (req, res) => {
    }
 
 
-
+   console.log(req.file.filename);
    console.log(req.file);
    console.log(encryptedPassword);
 

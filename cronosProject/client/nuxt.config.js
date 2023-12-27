@@ -40,7 +40,7 @@ export default {
 
 
 
-   modules : ["@nuxtjs/axios"],
+   modules : ["@nuxtjs/axios" , "@nuxtjs/auth"],
 
 
   axios: {
@@ -49,6 +49,26 @@ export default {
 
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {
+  build: {},
+  auth: {
+      strategies:{
+        local:{
+          endpoinsts:{
+            login:{
+                url : "api/users/auth/login",
+                method:"post",
+                propertyName:"token"
+
+            },
+            user:{
+              url:"api/users/auth/user",
+              method:"get",
+              propertyName: false
+            }
+          },
+          tokenType:"",
+          logout:false
+        }
+      }
   }
-}
+};

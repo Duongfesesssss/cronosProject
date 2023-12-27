@@ -52,7 +52,7 @@
           <a class="button is-primary" href="/signup" @click="handleClick">
             <strong> Đăng ký</strong>
           </a>
-          <a class="button is-light">
+          <a class="button is-light" href="/login" @click="handleClick"> 
             Đăng Nhập
           </a>
         </div>
