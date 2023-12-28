@@ -18,7 +18,7 @@ module.exports = function (req, res, next) {
       } else {
         req.decoded = decoded;
         next();
-        console.log(decoded);
+     //   console.log(decoded);
       }
     });
   } else {

@@ -22,68 +22,101 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage });
 
 
-/* Get all users */
-router.get("/", async (req, res) => {
+// /* Get all users */
+// router.get("/", async (req, res) => {
+//   try {
+//     await pool.connect();
+//     const result = await pool
+//       .request()
+//       .query(`SELECT * FROM users`);
+//     const users = result.recordset;
+
+//     res.json(users);
+//    // console.log(users);
+//   } catch (error) {
+//     res.status(500).json(error);
+//   }
+// });
+
+// /* Get email */
+// router.get("/findemail", async (req, res) => {
+//   try {
+//     await pool.connect();
+//     const result = await pool
+//       .request()
+//       .input("email", req.query.email)
+//       .query(`SELECT * FROM users WHERE email = @email`);
+//     const email = result.recordset;
+//     res.json(email);
+//   } catch (error) {
+//     res.status(500).json(error);
+//   }
+// });
+
+// /* Get user by id */
+// router.get("/:_id", async (req, res) => {
+//   try {
+//     await pool.connect();
+//     const result = await pool
+//       .request()
+//       .input("_id", req.params._id)
+//       .query(`SELECT * FROM users WHERE _id = @_id`);
+//     const user = result.recordset[0];
+//     if (!user) {
+//       res.status(403).json({
+//         success: false,
+//         message: "Authenticate failed, not found user",
+//       });
+//     } else {
+//       res.json(user);
+//     }
+//   } catch (error) {
+//     res.status(500).json(error);
+//   }
+// });
+
+/* Login user auth */
+router.post("/auth/login", async (req, res, next) => {
+  const email = req.body.email;
+  const password = req.body.password;
   try {
     await pool.connect();
     const result = await pool
       .request()
-      .query(`SELECT * FROM users`);
-    const users = result.recordset;
-
-    res.json(users);
-   // console.log(users);
-  } catch (error) {
-    res.status(500).json(error);
-  }
-});
-
-/* Get email */
-router.get("/findemail", async (req, res) => {
-  try {
-    await pool.connect();
-    const result = await pool
-      .request()
-      .input("email", req.query.email)
+      .input("email", email)
       .query(`SELECT * FROM users WHERE email = @email`);
-    const email = result.recordset;
-    res.json(email);
-  } catch (error) {
-    res.status(500).json(error);
-  }
-});
-
-/* Get user by id */
-router.get("/:_id", async (req, res) => {
-  try {
-    await pool.connect();
-    const result = await pool
-      .request()
-      .input("_id", req.params._id)
-      .query(`SELECT * FROM users WHERE _id = @_id`);
+    //  console.log(email);
     const user = result.recordset[0];
     if (!user) {
       res.status(403).json({
         success: false,
-        message: "Authenticate failed, not found user",
+        message: "Authenticate failed, aaaaaaaaa",
       });
     } else {
-      res.json(user);
+      const match = await bcrypt.compare(password, user.password);
+      if (match) {
+        let token = jwt.sign(user, process.env.SECRET, { expiresIn: "2 days" });
+        res.json({ user, token });
+       // console.log(user);
+      } else {
+        res.status(403).json({
+          success: false,
+          message: "Authenticate failed, wrong password",
+        });
+      }
     }
   } catch (error) {
     res.status(500).json(error);
   }
 });
 
+
 /* Lấy 1 user auth */
 router.get("/auth/user", verifyToken, async (req, res) => {
-
-
-
-  //console.log(req.decoded)
+  console.log(req.decoded)
   //console.log(req.decoded.user)
   //console.log(req.decoded.user.email)
-  const email = req.decoded.user.email;
+  const email = req.decoded.email;
   try {
     await pool.connect();
     const result = await pool
@@ -110,40 +143,7 @@ router.get("/auth/user", verifyToken, async (req, res) => {
 
 
 
-/* Login user auth */
-router.post("/auth/login", async (req, res, next) => {
-  const email = req.body.email;
-  const password = req.body.password;
-  try {
-    await pool.connect();
-    const result = await pool
-      .request()
-      .input("email", email)
-      .query(`SELECT * FROM users WHERE email = @email`);
-      console.log(req.email);
-    const user = result.recordset[0];
-    if (!user) {
-      res.status(403).json({
-        success: false,
-        message: "Authenticate failed, not found user",
-      });
-    } else {
-      const match = await bcrypt.compare(password, user.password);
-      if (match) {
-        let token = jwt.sign(user, process.env.SECRET, { expiresIn: "2 days" });
-        res.json({ user, token });
-        //console.log(user);
-      } else {
-        res.status(403).json({
-          success: false,
-          message: "Authenticate failed, wrong password",
-        });
-      }
-    }
-  } catch (error) {
-    res.status(500).json(error);
-  }
-});
+
 
 /* Create user auth */
 router.post("/account", upload.single("avatar"), async (req, res) => {
@@ -184,7 +184,7 @@ router.post("/account", upload.single("avatar"), async (req, res) => {
    //  console.log(user);
     //console.log(user);
     let token = jwt.sign({ user }, process.env.SECRET, { expiresIn: "2 days" });
-   // console.log(token);
+   console.log(token);
     res.json({ user, token, message: "Create user success!" });
   } catch (error) {
     res.status(500).json(error);

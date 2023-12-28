@@ -49,12 +49,12 @@
         methods:{
           async login() {
             try {
-                await this.$axios.$post('/api/users/auth/login', this.form)
+                await this.$axios.$post('http://localhost:8888/api/users/auth/login', this.form)
                 .then(()=>{
                     this.$auth.loginWith('local',{
                         data:{
                             email: this.form.email,
-                            password:this.form.password
+                            password:this.form.password,
                         }
                     });
                 });

@@ -8,7 +8,7 @@ const { pool } = require("../database/dbinfo");
 
 
 
-router.get("/connect", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     await pool.connect();
     const result = await pool.request().query("select * from testApi");
