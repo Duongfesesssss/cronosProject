@@ -18,8 +18,10 @@
               </div>
               <button @click.prevent="login" class="button is-warning mb-6 is-fullwidth">Sign In</button>
               <a class="is-size-6 has-text-grey-dark" href="#"
-                >Forgot password?</a
-              >
+                >Forgot password?</a>
+                <a  class="is-size-6 has-text-grey-dark" href="/signup"
+                >Chưa có tài khoản?</a>
+              
             </form>
           </div>
         </div>
@@ -37,7 +39,13 @@
   
 
   <script>
+
+
+
     export default{
+      layout: "none",
+      middleware: "auth",
+      auth: "guest",
         data(){
             return{
                 form:{

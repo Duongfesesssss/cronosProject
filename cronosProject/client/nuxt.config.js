@@ -37,7 +37,7 @@ export default {
   modules: [
   ],
 
-
+  
 
 
    modules : ["@nuxtjs/axios" , "@nuxtjs/auth"],
@@ -69,6 +69,12 @@ export default {
           tokenType:"",
           logout:false
         }
+      },
+      watchLoggedIn:true,
+      redirect:{
+        login :'/login',
+        logout :'/login',
+        callback :'/login'
       }
   }
 };
