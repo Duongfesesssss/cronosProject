@@ -166,6 +166,8 @@ router.post("/account", upload.single("avatar"), async (req, res) => {
 
   try {
     await pool.connect();
+
+    const currentTime = new Date();
     const result = await pool
       .request()
       .input("email", req.body.email)
@@ -174,7 +176,7 @@ router.post("/account", upload.single("avatar"), async (req, res) => {
       .input("password", encryptedPassword)
       .input("role", req.body.role)
       .input("createdBy", req.body.createdBy)
-      .input("createdAt", req.body.updatedAt)
+      .input("createdAt", currentTime)
       .input("avatar", req.body.avatar)
       .query(`
                   INSERT INTO users (email, username, name, password, role, createdBy, createdAt, avatar) 
